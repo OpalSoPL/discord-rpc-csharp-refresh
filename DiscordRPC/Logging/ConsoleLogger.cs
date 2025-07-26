@@ -16,59 +16,38 @@ namespace DiscordRPC.Logging
 		public LogLevel Level { get; set; }
 
 		/// <summary>
+		/// Toggles verbose mode. When disabled, only important Errors and Warnings are shown
+		/// </summary>
+		public bool Verbose { get; set; }
+
+		/// <summary>
 		/// Should the output be coloured?
 		/// </summary>
 		public bool Coloured { get; set; }
-		
-		/// <summary>
-		/// A alias too <see cref="Coloured"/>
-		/// </summary>
-		[System.Obsolete("Use Coloured")]
-		public bool Colored {
-			get => Coloured;
-			set => Coloured = value;
-		}
-       
-        /// <summary>
-        /// Creates a new instance of a Console Logger.
-        /// </summary>
-        public ConsoleLogger()
-        {
-            this.Level = LogLevel.Info;
-            Coloured = false;
-        }
 
 		/// <summary>
-		/// Creates a new instance of a Console Logger
+		/// Creates a new instance of a Console Logger.
 		/// </summary>
 		/// <param name="level">The log level</param>
-		public ConsoleLogger(LogLevel level)
-			: this()
-        {
+		/// <param name="coloured">Should the logs be in colour?</param>
+		/// <param name="verbose">Should the logs be more detailed?</param>
+		public ConsoleLogger(LogLevel level = LogLevel.Info, bool coloured = false, bool verbose = false)
+		{
 			Level = level;
+			Coloured = coloured;
+			Verbose = verbose;
         }
 
         /// <summary>
-        /// Creates a new instance of a Console Logger with a set log level
-        /// </summary>
-        /// <param name="level">The log level</param>
-        /// <param name="coloured">Should the logs be in colour?</param>
-        public ConsoleLogger(LogLevel level, bool coloured)
-        {
-            Level = level;
-            Coloured = coloured;
-        }
+		/// Informative log messages
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="args"></param>
+		public void Trace(string message, params object[] args)
+		{
+			if (Level > LogLevel.Trace) return;
 
-        /// <summary>
-        /// Informative log messages
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="args"></param>
-        public void Trace(string message, params object[] args)
-        {
-            if (Level > LogLevel.Trace) return;
-
-            if (Coloured) Console.ForegroundColor = ConsoleColor.Gray;
+			if (Coloured) Console.ForegroundColor = ConsoleColor.Gray;
 
 			string prefixedMessage = "TRACE: " + message;
 
@@ -110,9 +89,18 @@ namespace DiscordRPC.Logging
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="args"></param>
-		public void Warning(string message, params object[] args)
+		public void Warning(string message, params object[] args) => Warning(message, false, args);
+		
+		/// <summary>
+		/// Warning log messages
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="args"></param>
+		/// <param name="verbose"></param>
+		public void Warning(string message, bool verbose, params object[] args)
 		{
 			if (Level > LogLevel.Warning) return;
+			if (verbose && !Verbose) return;
 
 			if (Coloured) Console.ForegroundColor = ConsoleColor.Yellow;
 
@@ -129,13 +117,22 @@ namespace DiscordRPC.Logging
 		}
 
 		/// <summary>
-		/// Error log messsages
+		/// Error log messages
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="args"></param>
-		public void Error(string message, params object[] args)
+		public void Error(string message, params object[] args) => Error(message, false, args);
+
+		/// <summary>
+		/// Error log messages
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="args"></param>
+		/// <param name="verbose"></param>
+		public void Error(string message, bool verbose, params object[] args)
 		{
 			if (Level > LogLevel.Error) return;
+			if (verbose && !Verbose) return;
 
 			if (Coloured) Console.ForegroundColor = ConsoleColor.Red;
 
@@ -150,6 +147,5 @@ namespace DiscordRPC.Logging
 				Console.WriteLine(prefixedMessage);
 			}
 		}
-
-	}
+    }
 }

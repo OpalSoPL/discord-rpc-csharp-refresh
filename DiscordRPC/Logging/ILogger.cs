@@ -15,12 +15,17 @@ namespace DiscordRPC.Logging
 		/// </summary>
 		LogLevel Level { get; set; }
 
-        /// <summary>
-        /// Debug trace messeages used for debugging internal elements.
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="args"></param>
-        void Trace(string message, params object[] args);
+		/// <summary>
+		/// Toggles verbose mode. When disabled, only important Errors and Warnings are shown
+		/// </summary>
+		bool Verbose { get; set; }
+
+		/// <summary>
+		/// Debug trace messeages used for debugging internal elements.
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="args"></param>
+		void Trace(string message, params object[] args);
 
 		/// <summary>
 		/// Informative log messages
@@ -37,10 +42,26 @@ namespace DiscordRPC.Logging
 		void Warning(string message, params object[] args);
 
 		/// <summary>
-		/// Error log messsages
+		/// Warning log messages
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="args"></param>
+		/// <param name="verbose"></param>
+		void Warning(string message, bool verbose, params object[] args);
+
+		/// <summary>
+		/// Error log messages
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="args"></param>
 		void Error(string message, params object[] args);
+
+		/// <summary>
+		/// Error log messages
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="args"></param>
+		/// <param name="verbose"></param>
+		void Error(string message, bool verbose, params object[] args);
 	}
 }
