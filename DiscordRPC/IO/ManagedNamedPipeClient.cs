@@ -106,6 +106,8 @@ namespace DiscordRPC.IO
                 }
             }
 
+            Logger.Error("Failed to connect to any pipe");
+
             //We failed to connect
             return false;
         }
@@ -159,7 +161,7 @@ namespace DiscordRPC.IO
             {
                 //Something happened, try again
                 //TODO: Log the failure condition
-                Logger.Error("Failed connection to {0}. {1}", pipename, e.Message);
+                Logger.Error("Failed connection to {0}. {1}", verbose: true, pipename, e.Message);
                 Close();
             }
 
@@ -374,10 +376,10 @@ namespace DiscordRPC.IO
         /// </summary>
         public void Close()
         {
-            //If we are already closed, jsut exit
+            //If we are already closed, just exit
             if (_isClosed)
             {
-                Logger.Warning("Tried to close a already closed pipe.");
+                Logger.Warning("Tried to close a already closed pipe.", verbose: true);
                 return;
             }
 
